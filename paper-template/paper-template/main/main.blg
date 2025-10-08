@@ -1,0 +1,56 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: plainurl.bst
+Illegal, another \bibstyle command---line 32 of file main.aux
+ : \bibstyle
+ :          {abbrv}
+I'm skipping whatever remains of this command
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=200001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: ../extras/biblio.bib
+You've used 3 entries,
+            2943 wiz_defined-function locations,
+            656 strings with 5583 characters,
+and the built_in function-call counts, 1581 in all, are:
+= -- 157
+> -- 64
+< -- 1
++ -- 23
+- -- 20
+* -- 92
+:= -- 247
+add.period$ -- 9
+call.type$ -- 3
+change.case$ -- 19
+chr.to.int$ -- 0
+cite$ -- 3
+duplicate$ -- 45
+empty$ -- 141
+format.name$ -- 20
+if$ -- 394
+int.to.chr$ -- 0
+int.to.str$ -- 3
+missing$ -- 3
+newline$ -- 18
+num.names$ -- 6
+pop$ -- 33
+preamble$ -- 1
+purify$ -- 16
+quote$ -- 0
+skip$ -- 102
+stack$ -- 0
+substring$ -- 84
+swap$ -- 13
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 12
+warning$ -- 0
+while$ -- 12
+width$ -- 4
+write$ -- 35
+(There was 1 error message)

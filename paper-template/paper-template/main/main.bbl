@@ -1,0 +1,20 @@
+\begin{thebibliography}{1}
+
+\bibitem{BaganDG07}
+Guillaume Bagan, Arnaud Durand, and Etienne Grandjean.
+\newblock On acyclic conjunctive queries and constant delay enumeration.
+\newblock In {\em CSL}, pages 208--222, 2007.
+
+\bibitem{BucchiGQRV22}
+Marco Bucchi, Alejandro Grez, Andr{\'{e}}s Quintana, Cristian Riveros, and
+  Stijn Vansummeren.
+\newblock {CORE:} a complex event recognition engine.
+\newblock {\em VLDB}, 15(9):1951--1964, 2022.
+
+\bibitem{DurandG07}
+Arnaud Durand and Etienne Grandjean.
+\newblock First-order queries on structures of bounded degree are computable
+  with constant delay.
+\newblock {\em {ACM} Trans. Comput. Log.}, 8(4):21, 2007.
+
+\end{thebibliography}

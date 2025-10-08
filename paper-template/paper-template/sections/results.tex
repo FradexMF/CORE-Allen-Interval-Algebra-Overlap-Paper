@@ -1,0 +1,95 @@
+%!TEX root = ../main/main.tex
+
+In this section we introduce an extension to the semantics of CEL, namely we introduce a new operator using [allen interval algebra] \textit{overlap}. 
+We then extend the formal computational model for evaluating CEL formulas and prove its correctness. We start by recalling the notion of a CEA to later extend the proof.
+\Fernando{i belive this is not right as a presentation of what we are doing, take it as a placeholder}  
+\paragraph{Complex Event Automata} A \textit{Complex Event Automata} (CEA) is a tuple $\mathcal{A} = (Q,$\textbf{P},\textbf{X},$\Delta,q_0,F)$ where $Q$ is a finite set of states, \textbf{P} is the set of predicates, \textbf{X} is a finite set of variables, $\Delta \subseteq Q \times \textbf{P} \times 2^{\textbf{X}} \times Q$ is a finite relation (called the transition relation), $q_0 \in Q$ is the inital state, and $F$ is the set of final states. A run $\rho$ of $\mathcal{A}$ over the stream $\bar{S} = e_1 e_2 \dots e_n$ from position $i$ to $j$ is a sequence:
+$$ \rho := p_i \xrightarrow{P_i,L_i} p_{i+1} \xrightarrow{P_{i+1},L_{i+1}} p_{i+2} \xrightarrow{P_{i+2},L_{i+2}} \dots \xrightarrow{P_{j},L_{j}} p_{j+1}$$
+where $p_i = q_0, (p_k, P_k, L_k, p_{k+1}) \in \Delta$, and $e_k \vDash P_k$ for all $k \in [i..j]$. We say that the run is accepting if $p_{j+1} \in F$. A run $\rho$ from positions $i$ to $j$ like above defines the complex event $C_\rho = (i, j, \mu_\rho)$ such that $\mu_\rho(X) = {k \in [i..j] \mid X \in L_k}$ for every $X \in$ \textbf{X}. Note that the starting and ending positions $i, j$ of the run define the interval of the complex event, and the labels $L_k \subseteq$ \textbf{X} define the mapping $\mu_\rho$ of $C_\rho$. We  define the set of all complex events of $\mathcal{A}$ over $\bar{S}$ as:  
+$$\text{\textlbrackdbl} \mathcal{A} \text{\textrbrackdbl}(\bar{S}) = \{C_\rho \mid \rho \text{ is an accepting run of }\mathcal{A} \text{ over }\bar{S}\}$$
+We know from [11,22] the following theorem:
+\begin{theorem}[CEA and CEL equivalence] \label{theo:mytheorem}
+	For every CEL formula $\varphi$ there exists a CEA $\mathcal{A}_\varphi$ such that \textlbrackdbl $\varphi$ \textrbrackdbl($\bar{S}$) $ = $ \textlbrackdbl $\mathcal{A}_\varphi$  \textrbrackdbl ($\bar{S}$) for every stream $\bar{S}$
+\end{theorem}
+
+%We present here the data structure, called Enumerable Compact Sets with Shifts, to compactly store the outputs of evaluating an annotated automaton over a straight-line program. This structure extends Enumerable Compact Sets (ECS) introduced in~\cite{DurandG07} (we note that a similar data structure for constant-delay enumeration was previously proposed in~\cite{BaganDG07}). Indeed, people have also used ECS extensions in~\cite{DurandG07,BucchiGQRV22}. This new version extends ECS by introducing a shift operator, which helps compactly move all outputs' positions with a single call. Although the shift nodes require a revision of the complete ECS model, it simplifies the evaluation algorithm in Section~\ref{sec:preliminaries} and achieves output-linear delay for enumerating all outputs. For completeness of presentation, this section goes through all main details as in~\cite{BaganDG07}.
+%
+%\begin{lemma}\label{lemma:mylemma}
+%	Given an SLP $S$, we can compute the values of $|\operatorname{str}(A)|$ for all non-terminals $A$ in $S$ in time $\mathcal{O}(|S|)$.		
+%\end{lemma}
+%
+%From now on, we assume that all SLPs are in Chomsky normal form, due to the following result:
+%
+%\begin{theorem}[SLP Balancing theorem] \label{theo:mytheorem}
+%	There is a $c\in\bbN$ such that any given SLP $S$ for string $w$ can be transformed in time $\cO(|S|)$ into a SLP $S'$ for $w$ in Chomsky normal form with $|S'| \leq c\cdot|S|$.
+%\end{theorem}
+%
+%Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+%
+%\begin{proposition}\label{prop:myproposition}
+%	Given an SLP $S$, we can compute the values of $|\operatorname{str}(A)|$ for all non-terminals $A$ in $S$ in time $\mathcal{O}(|S|)$.		
+%\end{proposition}
+%\begin{proof}[Proof Sketch]
+%	This is a short paragraph that gives an idea of the full proof to the statement above.
+%\end{proof}
+%
+%The proposition above is Proposition~\ref{prop:myproposition}. The complete proof can be found in the full version of the paper.
+%
+%
+%\let\oldReturn\Return
+%\renewcommand{\Return}{\State\oldReturn}
+%
+%\begin{algorithm*}[t]
+%	\caption{The enumeration algorithm of an unambiguous $\mathcal{A} = (Q,\Sigma, \Omega, \Delta,q_0,F)$ over a SLP-compressed document $S = (N, \Sigma, R, S_0)$.}\label{alg:evaluation}
+%	\smallskip
+%	\begin{varwidth}[t]{0.60\textwidth}
+%		\begin{algorithmic}[1]
+%			\Procedure{Evaluation}{$\cA,S$}
+%			\State Initialize $\cD$ as an empty $\bot$.
+%			\State $\textproc{NonTerminal}(S_0)$
+%			\State $v \gets \bot$
+%			\ForEach{$q \in F$} 
+%			\State $v \gets \textsc{union}(v, M_{S_0}[q_0, q])$
+%			\EndFor
+%			\State $\textproc{Enumerate}(v, \cD)$
+%			
+%			\EndProcedure
+%			\smallskip
+%			
+%			\Procedure{Terminal}{$a$}
+%			\State $M_a \gets \{[p,q] \to \bot \mid p,q \in  Q\}$
+%			\ForEach{$(p,a,o, q) \in \Delta$} 
+%			\State $M_a[p,q] \gets \textsc{union}(M_a[p,q],\, \textsc{add}(o))$
+%			\EndFor
+%			\ForEach{$(p,a,q) \in \Delta$} 
+%			\State $M_a[p,q] \gets \textsc{union}(M_a[p,q], \, \epsilon)$
+%			\EndFor
+%			\EndProcedure
+%			\algstore{myalg}
+%		\end{algorithmic}
+%	\end{varwidth} \ \ \ \ \ 
+%	\begin{varwidth}[t]{0.60\textwidth}
+%		\begin{algorithmic}[1]
+%			\algrestore{myalg}
+%			\Procedure{NonTerminal}{$X$}
+%			\State $M_X \gets \{[p,q] \to \bot \mid p,q \in  Q, p \neq q\} \, \cup$ \par\hspace{2.7em} $\{[p,q] \to \epsilon \mid p,q \in  Q, p = q\}$
+%			\State $\operatorname{len}_X \gets 0$
+%			\For{$i=1$ \textbf{to} $|R(X)|$}
+%			\State $Y \gets R(X)[i]$
+%			\If{$M_Y$ is not defined}
+%			\If{$Y \in \Sigma$}
+%			\State $\textproc{Terminal}(Y)$
+%			\Else
+%			\State $\textproc{NonTerminal}(Y)$
+%			\EndIf 
+%			\EndIf 
+%			\State $M_X \gets M_X \otimes \textproc{Shift}(M_Y, \operatorname{len}_X)$
+%			\State $\operatorname{len}_X \gets \operatorname{len}_X + \operatorname{len}_Y$
+%			\EndFor 
+%			\EndProcedure
+%		\end{algorithmic}
+%	\end{varwidth} 
+%	\smallskip
+%\end{algorithm*}
+%
+%
