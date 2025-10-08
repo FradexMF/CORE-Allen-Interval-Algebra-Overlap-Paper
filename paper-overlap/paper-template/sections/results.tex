@@ -2,15 +2,32 @@
 
 In this section we introduce an extension to the semantics of CEL, namely we introduce a new operator using [allen interval algebra] \textit{overlap}. 
 We then extend the formal computational model for evaluating CEL formulas and prove its correctness. We start by recalling the notion of a CEA to later extend the proof.
-\Fernando{i belive this is not right as a presentation of what we are doing, take it as a placeholder}  
+\Fernando{this intro is just to get the point a cross, not polished}  
 \paragraph{Complex Event Automata} A \textit{Complex Event Automata} (CEA) is a tuple $\mathcal{A} = (Q,$\textbf{P},\textbf{X},$\Delta,q_0,F)$ where $Q$ is a finite set of states, \textbf{P} is the set of predicates, \textbf{X} is a finite set of variables, $\Delta \subseteq Q \times \textbf{P} \times 2^{\textbf{X}} \times Q$ is a finite relation (called the transition relation), $q_0 \in Q$ is the inital state, and $F$ is the set of final states. A run $\rho$ of $\mathcal{A}$ over the stream $\bar{S} = e_1 e_2 \dots e_n$ from position $i$ to $j$ is a sequence:
 $$ \rho := p_i \xrightarrow{P_i,L_i} p_{i+1} \xrightarrow{P_{i+1},L_{i+1}} p_{i+2} \xrightarrow{P_{i+2},L_{i+2}} \dots \xrightarrow{P_{j},L_{j}} p_{j+1}$$
 where $p_i = q_0, (p_k, P_k, L_k, p_{k+1}) \in \Delta$, and $e_k \vDash P_k$ for all $k \in [i..j]$. We say that the run is accepting if $p_{j+1} \in F$. A run $\rho$ from positions $i$ to $j$ like above defines the complex event $C_\rho = (i, j, \mu_\rho)$ such that $\mu_\rho(X) = {k \in [i..j] \mid X \in L_k}$ for every $X \in$ \textbf{X}. Note that the starting and ending positions $i, j$ of the run define the interval of the complex event, and the labels $L_k \subseteq$ \textbf{X} define the mapping $\mu_\rho$ of $C_\rho$. We  define the set of all complex events of $\mathcal{A}$ over $\bar{S}$ as:  
 $$\text{\textlbrackdbl} \mathcal{A} \text{\textrbrackdbl}(\bar{S}) = \{C_\rho \mid \rho \text{ is an accepting run of }\mathcal{A} \text{ over }\bar{S}\}$$
-We know from [11,22] the following theorem:
+We present then the overlap operator for CEL as with the following definition:
+$$
+\begin{aligned}
+\text{\textlbrackdbl} \varphi_1 \text{ :o } \varphi_2 \text{\textrbrackdbl}(\bar{S})
+&= \{C_1 \cup C_2 \mid C_1 \in \text{\textlbrackdbl} \varphi_1 \text{\textrbrackdbl}(\bar{S}) 
+\land C_2 \in \text{\textlbrackdbl} \varphi_2 \text{\textrbrackdbl}(\bar{S})  \\& \hspace*{12pt} \land
+start(C_1) \leq start(C_2) \leq end(C_1) \leq end(C_2)\}
+\end{aligned}
+$$
+%$$ = $$
+We also know from [11,22] the following theorem:
 \begin{theorem}[CEA and CEL equivalence] \label{theo:mytheorem}
-	For every CEL formula $\varphi$ there exists a CEA $\mathcal{A}_\varphi$ such that \textlbrackdbl $\varphi$ \textrbrackdbl($\bar{S}$) $ = $ \textlbrackdbl $\mathcal{A}_\varphi$  \textrbrackdbl ($\bar{S}$) for every stream $\bar{S}$
+	For every CEL formula $\varphi$ there exists a CEA $\mathcal{A}_\varphi$ such that \textlbrackdbl $\varphi$\textrbrackdbl($\bar{S}$) $ = $ \textlbrackdbl $\mathcal{A}_\varphi$\textrbrackdbl ($\bar{S}$) for every stream $\bar{S}$
 \end{theorem}
+To maintain the correctness of it true, we extend the induction proof [11,22] by adding an extra case for this operator. \\
+Lets assume then that there exists an automaton that satisfies the previous property for $\varphi_1$ and $\varphi_2$, therefore we know there exists $\mathcal{A}_{\varphi_1} = (Q_1,\text{\textbf{P}}_1,\text{\textbf{X}}_1,q_0,F_1)$ and $\mathcal{A}_{\varphi_2} = (Q_2,\text{\textbf{P}}_2,\text{\textbf{X}}_2,p_0,F_2)$ 
+
+Let $\mathcal{A}_{:o}$ be a CEA such that $\mathcal{A}_{:o} = ()$ 
+
+
+
 
 %We present here the data structure, called Enumerable Compact Sets with Shifts, to compactly store the outputs of evaluating an annotated automaton over a straight-line program. This structure extends Enumerable Compact Sets (ECS) introduced in~\cite{DurandG07} (we note that a similar data structure for constant-delay enumeration was previously proposed in~\cite{BaganDG07}). Indeed, people have also used ECS extensions in~\cite{DurandG07,BucchiGQRV22}. This new version extends ECS by introducing a shift operator, which helps compactly move all outputs' positions with a single call. Although the shift nodes require a revision of the complete ECS model, it simplifies the evaluation algorithm in Section~\ref{sec:preliminaries} and achieves output-linear delay for enumerating all outputs. For completeness of presentation, this section goes through all main details as in~\cite{BaganDG07}.
 %
