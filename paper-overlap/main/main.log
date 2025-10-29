@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.9.30)  8 OCT 2025 14:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.9.30)  29 OCT 2025 12:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1573,26 +1573,77 @@ LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 3
  (c:/texlive/2025/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )) (../sections/results.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
 
 [2.2{c:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{c:/texlive/2025/
 texmf-dist/fonts/enc/dvips/mnsymbol/MnSymbolF.enc}]
-Overfull \hbox (18.84425pt too wide) in paragraph at lines 6--7
-\T1/lmr/bx/n/10 (-20) Complex Event Auto-mata\T1/lmr/m/n/10 (-20) . A \T1/lmr/m
-/it/10 (-20) Com-plex Event Auto-mata \T1/lmr/m/n/10 (-20) (CEA) is a tuple $\O
-MS/MnSymbolS/m/n/10 A \U/MnSymbolD/m/n/10 ^^@ \OMX/MnSymbolE/m/n/10 à\OML/lmm/m
-/it/10 Q;$\T1/lmr/bx/n/10 (-20) P\T1/lmr/m/n/10 (-20) ,\T1/lmr/bx/n/10 (-20) X\
-T1/lmr/m/n/10 (-20) ,$\OT1/lmr/m/n/10 (-20) ^^A\OML/lmm/m/it/10 ; q[]; F\OMX/Mn
-SymbolE/m/n/10 ç$
+Underfull \hbox (badness 10000) in paragraph at lines 23--39
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--39
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--39
+
+ []
+
+
+
+[3.3{c:/texlive/2025/texmf-dist/fonts/enc/dvips/mnsymbol/MnSymbolS.enc}]
+Underfull \hbox (badness 10000) in paragraph at lines 50--56
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--71
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--71
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--71
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--71
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--71
+
+ []
+
+
+
+[4.4]
+Underfull \hbox (badness 10000) in paragraph at lines 75--80
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 75--80
+
  []
 
 ) (../sections/concl.tex)
 
-[3.3{c:/texlive/2025/texmf-dist/fonts/enc/dvips/mnsymbol/MnSymbolS.enc}]
-(./main.bbl)
+[5.5] (./main.bbl)
 
-[4.4] (../appendix/app-preliminaries.tex) (../appendix/app-results.tex
+[6.6] (../appendix/app-preliminaries.tex) (../appendix/app-results.tex
 
-LaTeX Warning: Reference `lemma:mylemma' on page 5 undefined on input line 3.
+LaTeX Warning: Reference `lemma:mylemma' on page 7 undefined on input line 3.
 
 (../figures/enumfig.tex)
 LaTeX Font Info:    Trying to load font information for OT1+lmtt on input line 
@@ -1624,7 +1675,7 @@ LaTeX Font Info:    Undo math alphabet allocation in version normal on input li
 ne 10.
 
 
-[5.5] (../figures/gadgetufig.tex
+[7.7] (../figures/gadgetufig.tex
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 6.
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
@@ -1717,9 +1768,9 @@ Underfull \vbox (badness 2762) has occurred while \output is active []
 
 
 
-[6.6{c:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-rmtt.enc}]
+[8.8{c:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-rmtt.enc}]
 
-LaTeX Warning: Reference `prop:myproposition' on page 7 undefined on input line
+LaTeX Warning: Reference `prop:myproposition' on page 9 undefined on input line
  40.
 
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
@@ -1749,7 +1800,7 @@ LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 45.
 
 
-[7.7] (../figures/gadgetpepsfig.tex
+[9.9] (../figures/gadgetpepsfig.tex
 LaTeX Font Info:    No math alphabet change to frozen version normal on input l
 ine 6.
 LaTeX Font Info:    Nested math: keeping math alphabet allocation in version no
@@ -1833,7 +1884,7 @@ See the caption package documentation for explanation.
 
 
 
-[8.8] (./main.aux)
+[10.10] (./main.aux)
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-09-02>
@@ -1850,13 +1901,13 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: ED17A0C3B0C2FE17586A0CA3D44D5514;1359.
  ) 
 Here is how much of TeX's memory you used:
- 39256 strings out of 467748
- 746425 string characters out of 5431138
- 1163804 words of memory out of 5000000
+ 39289 strings out of 467748
+ 746824 string characters out of 5431138
+ 1163735 words of memory out of 5000000
  66923 multiletter control sequences out of 15000+600000
- 789957 words of font info for 309 fonts, out of 8000000 for 9000
+ 791372 words of font info for 325 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 89i,13n,94p,1117b,890s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 89i,13n,94p,1136b,890s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2025/texmf-dist/fonts/type1/public/fontawesome5/FontAwesome5Free-
 Regular.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/mnsymbol/MnSymbol10.
 pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/mnsymbol/MnSymbol5.pfb><c:/t
@@ -1867,24 +1918,25 @@ s/type1/public/lm/lmbx10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/lm/
 lmbx12.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx7.pfb><c:/texl
 ive/2025/texmf-dist/fonts/type1/public/lm/lmmi10.pfb><c:/texlive/2025/texmf-dis
 t/fonts/type1/public/lm/lmmi5.pfb><c:/texlive/2025/texmf-dist/fonts/type1/publi
-c/lm/lmmi7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi9.pfb><c:/
-texlive/2025/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/texlive/2025/texmf-
-dist/fonts/type1/public/lm/lmr5.pfb><c:/texlive/2025/texmf-dist/fonts/type1/pub
-lic/lm/lmr6.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr7.pfb><c:/
-texlive/2025/texmf-dist/fonts/type1/public/lm/lmr9.pfb><c:/texlive/2025/texmf-d
-ist/fonts/type1/public/lm/lmri10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/pu
-blic/lm/lmri7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri9.pfb><
-c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss10.pfb><c:/texlive/2025/te
-xmf-dist/fonts/type1/public/lm/lmss8.pfb><c:/texlive/2025/texmf-dist/fonts/type
-1/public/lm/lmss9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbx1
-0.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtt10.pfb><c:/texlive/
-2025/texmf-dist/fonts/type1/public/lm/lmtt9.pfb><c:/texlive/2025/texmf-dist/fon
-ts/type1/public/amsfonts/symbols/msam10.pfb><c:/texlive/2025/texmf-dist/fonts/t
-ype1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (8 pages, 533539 bytes).
+c/lm/lmmi6.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi7.pfb><c:/
+texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi9.pfb><c:/texlive/2025/texmf-
+dist/fonts/type1/public/lm/lmr10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/pu
+blic/lm/lmr5.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr6.pfb><c:
+/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr7.pfb><c:/texlive/2025/texmf-
+dist/fonts/type1/public/lm/lmr9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/pub
+lic/lm/lmri10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri7.pfb><
+c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri9.pfb><c:/texlive/2025/tex
+mf-dist/fonts/type1/public/lm/lmss10.pfb><c:/texlive/2025/texmf-dist/fonts/type
+1/public/lm/lmss8.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss9.p
+fb><c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb><c:/texlive/2
+025/texmf-dist/fonts/type1/public/lm/lmtt10.pfb><c:/texlive/2025/texmf-dist/fon
+ts/type1/public/lm/lmtt9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/ams
+fonts/symbols/msam10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfont
+s/symbols/msbm10.pfb>
+Output written on main.pdf (10 pages, 556167 bytes).
 PDF statistics:
- 297 PDF objects out of 1000 (max. 8388607)
- 215 compressed objects within 3 object streams
- 29 named destinations out of 1000 (max. 500000)
+ 318 PDF objects out of 1000 (max. 8388607)
+ 229 compressed objects within 3 object streams
+ 30 named destinations out of 1000 (max. 500000)
  95829 words of extra memory for PDF output out of 106986 (max. 10000000)
 

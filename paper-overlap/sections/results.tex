@@ -2,9 +2,8 @@
 
 In this section we introduce an extension to the semantics of CEL, namely we introduce a new operator using [allen interval algebra] \textit{overlap}. 
 We then extend the formal computational model for evaluating CEL formulas and prove its correctness. We start by recalling the notion of a CEA to later extend the proof.
-\Fernando{this intro is just to get the point a cross, not polished}  
 \paragraph{Complex Event Automata} A \textit{Complex Event Automata} (CEA) is a tuple $\mathcal{A} = (Q,$\textbf{P},\textbf{X},$\Delta,q_0,F)$ where $Q$ is a finite set of states, \textbf{P} is the set of predicates, \textbf{X} is a finite set of variables, $\Delta \subseteq Q \times \textbf{P} \times 2^{\textbf{X}} \times Q$ is a finite relation (called the transition relation), $q_0 \in Q$ is the inital state, and $F$ is the set of final states. A run $\rho$ of $\mathcal{A}$ over the stream $\bar{S} = e_1 e_2 \dots e_n$ from position $i$ to $j$ is a sequence:
-$$ \rho := p_i \xrightarrow{P_i,L_i} p_{i+1} \xrightarrow{P_{i+1},L_{i+1}} p_{i+2} \xrightarrow{P_{i+2},L_{i+2}} \dots \xrightarrow{P_{j},L_{j}} p_{j+1}$$
+$$ \rho := p_i \xrightarrow{P_i/L_i} p_{i+1} \xrightarrow{P_{i+1}/L_{i+1}} p_{i+2} \xrightarrow{P_{i+2}/L_{i+2}} \dots \xrightarrow{P_{j}/L_{j}} p_{j+1}$$
 where $p_i = q_0, (p_k, P_k, L_k, p_{k+1}) \in \Delta$, and $e_k \vDash P_k$ for all $k \in [i..j]$. We say that the run is accepting if $p_{j+1} \in F$. A run $\rho$ from positions $i$ to $j$ like above defines the complex event $C_\rho = (i, j, \mu_\rho)$ such that $\mu_\rho(X) = {k \in [i..j] \mid X \in L_k}$ for every $X \in$ \textbf{X}. Note that the starting and ending positions $i, j$ of the run define the interval of the complex event, and the labels $L_k \subseteq$ \textbf{X} define the mapping $\mu_\rho$ of $C_\rho$. We  define the set of all complex events of $\mathcal{A}$ over $\bar{S}$ as:  
 $$\text{\textlbrackdbl} \mathcal{A} \text{\textrbrackdbl}(\bar{S}) = \{C_\rho \mid \rho \text{ is an accepting run of }\mathcal{A} \text{ over }\bar{S}\}$$
 We present then the overlap operator for CEL as with the following definition:
@@ -21,13 +20,68 @@ We also know from [11,22] the following theorem:
 \begin{theorem}[CEA and CEL equivalence] \label{theo:mytheorem}
 	For every CEL formula $\varphi$ there exists a CEA $\mathcal{A}_\varphi$ such that \textlbrackdbl $\varphi$\textrbrackdbl($\bar{S}$) $ = $ \textlbrackdbl $\mathcal{A}_\varphi$\textrbrackdbl ($\bar{S}$) for every stream $\bar{S}$
 \end{theorem}
-To maintain the correctness of it true, we extend the induction proof [11,22] by adding an extra case for this operator. \\
-Lets assume then that there exists an automaton that satisfies the previous property for $\varphi_1$ and $\varphi_2$, therefore we know there exists $\mathcal{A}_{\varphi_1} = (Q_1,\text{\textbf{P}}_1,\text{\textbf{X}}_1,q_0,F_1)$ and $\mathcal{A}_{\varphi_2} = (Q_2,\text{\textbf{P}}_2,\text{\textbf{X}}_2,p_0,F_2)$ 
-
-Then the construction for the operator will be $\mathcal{A}_{:o}$ be a CEA such that $\mathcal{A}_{:o} = ()$ 
-
-
-
+To maintain the correctness of it true, we extend the induction proof [11,22] by proving the following property: There exists a $\mathcal{A}_{:o}$ be a CEA as defined previously. Let $\varphi_1$ and $\varphi_2$ formulas in CEL. Then $$\text{\textlbrackdbl} \varphi_1 \text{ :o } \varphi_2 \text{\textrbrackdbl}(\bar{S}) = \text{\textlbrackdbl} \mathcal{A} \text{\textrbrackdbl}(\bar{S})$$
+ \\
+Lets assume then that there exists an automaton that satisfies the previous property for $\varphi_1$ and $\varphi_2$, therefore we know there exists $\mathcal{A}_{\varphi_1} = (Q_1,\text{\textbf{P}}_1,\text{\textbf{X}}_1,\Delta_1,q_0,F_1)$ and $\mathcal{A}_{\varphi_2} = (Q_2,\text{\textbf{P}}_2,\text{\textbf{X}}_2,\Delta_2,p_0,F_2)$ 
+Then the construction for the overlap operator is as folllows:
+\\ let $\mathcal{A}_{:o}$ be a CEA such that $\mathcal{A}_{:o} = (Q_1\uplus Q_2\uplus Q_1\times Q_2,\textbf{P}_1\cup\textbf{P}_2,\textbf{X}_1\cup\textbf{X}_2,\Delta_{:o}\uplus\Delta_1\uplus\Delta_2,q_0,F_2)$ where $\Delta_{:o}$ is defined as:
+\\ $\Delta_{:o} = \{(q,\text{TRUE},\emptyset,(q,p_0))\mid q \in Q_1, (q,p_0) \in Q_1\times Q_2\} \cup 
+\\ \{((q,p),P_1\land P_2, X_1\cup X_2, (q',p')) \mid (q,P_1,X_1,q')\in \Delta_1, (p,P_2,X_2,p')\in \Delta_2, (q,p),(q',p')\in Q_1 \times Q_2 \} \cup 
+\\ \{((q,p),\text{TRUE},\emptyset,p) \mid q\in F_1, p \in Q_2\}$\\ Intuitively, given an stream S we capture the eventes given $\varphi_1$, and at some point (the overlap) we start capturing the events for $\varphi_2$ too.
+\\\\
+We also recall that the base construction of a CEA $\mathcal{A}_R$ with $R \in$ \textbf{T} an event type, is as follows: $\mathcal{A}_\varphi = (\{q_1,q_2\},\Delta_\varphi,\{q_1\},\{q_2\})$ with $\Delta_\varphi = \{(q_1,R,\mu(R),q_2),(q_1,\text{TRUE},\emptyset,q_1)\}$. Because of this we note that in $\Delta_{:o}$ the transitions that represent the overlapped section mark correctly when $P_1$ and $P_2$ are triggered simultaneously by an event, and they too mark correctly when only one of the predicates is triggered. This conclusion comes from the fact that when we define  $\{((q,p),P_1\land P_2, X_1\cup X_2, (q',p'))\} $ where $ (q,P_1,X_1,q')\in \Delta_1, (p,P_2,X_2,p')\in \Delta_2$ the transitions in both $\Delta_1$ and $\Delta_2$ include the case $(q,$TRUE$,\emptyset,q)$, therefore when only one of the predicates is triggered there always exists a transition in $\Delta_{:o}$ defined as $((q,p),P_1\cap \text{TRUE},X_1\cup \emptyset,(q',p))$ where $(q,P_1,X_1,q')\in \Delta_1$, $(p,$TRUE$,\emptyset,p) \in \Delta_2$ and $(q,p),(q',p)\in Q_1 \times Q_2$.
+\\\\
+The proof is by double containment. 
+\\
+T.P. $\text{\textlbrackdbl} \varphi_1 \text{ :o } \varphi_2 \text{\textrbrackdbl}(\bar{S}) \subseteq \text{\textlbrackdbl} \mathcal{A}_{:o} \text{\textrbrackdbl}(\bar{S})$
+\\\\
+Let $C_1\cup C_2 \in \text{\textlbrackdbl} \varphi_1 \text{ :o } \varphi_2 \text{\textrbrackdbl}(\bar{S})$ where $C_i \in \text{\textlbrackdbl} \varphi_i\text{\textrbrackdbl}(\bar{S}) = \text{\textlbrackdbl} \mathcal{A}_{\varphi_i} \text{\textrbrackdbl}(\bar{S})$ with $i \in \{1,2\}$. From this we extend that there must exists a run on both $\mathcal{A}_{\varphi_1}$ and $\mathcal{A}_{\varphi_2}$ that accept $C_1$ and $C_2$ respectively. This is:
+$$\rho_1: q_0\xrightarrow{P_0/X_0}q_1\xrightarrow{P_1/X_1}\dots\xrightarrow{P_{n-1}/X_{n-1}}q_n$$
+$$\rho_2: p_0\xrightarrow{P'_0/X'_0}p_1\xrightarrow{P'_1/X'_1}\dots\xrightarrow{P'_{m-1}/X'_{m-1}}p_m$$
+With $q_n \in F_1$ and $p_m \in F_2$. By the previous construction of $\mathcal{A}_{:o}$ we can start building a run $\rho_{:o}$ as follows:
+$$\rho_{:o}: q_0\xrightarrow{P_0/X_0}q_1\xrightarrow{P_1/X_1}\dots\xrightarrow{P_{i-1}/X_{i-1}}q_i$$
+with $i \leq n$. By definition we know that $start(C_1) \leq start(C_2)$ therefore we can extend the run as such:
+$$\rho_{:o}:\dots q_i\xrightarrow{\text{TRUE}/\emptyset}(q_i,p_0)$$
+And then by construction:
+$$\rho_{:o}:\dots(q_i,p_0)\xrightarrow{P_i\land P'_0/X_i\cup X'_0}(q_{i+1},p_1)\xrightarrow{P_{i+1}\land P'_1/X_{i+1}\cup X'_1}\dots\xrightarrow{P_{n-1}\land P'_{j-1}/X_{n-1}\cup X'_{j-1}}(q_n,p_j)$$
+With $j \leq m$ and $q_n \in F_1$. By definition we know that $end(C_1) \leq end(C_2)$ therefore we can extend the run once more:
+$$\rho_{:o}:\dots(q_n,p_j)\xrightarrow{\text{TRUE}/\emptyset}p_j$$
+Finally then, by construction:
+$$\rho_{:o}:\dots p_j\xrightarrow{P'_j/X'_j}p_{j+1}\xrightarrow{P'_{j+1}/X'_{j+1}}\dots\xrightarrow{P'_{n-1}/X'_{n-1}}p_n$$
+Because $p_n \in F_2$, then $\rho_{:o}$ is a run of $\mathcal{A}_{:o}$ that accepts $C_1\cup C_2$ over a stream $\bar{S}$. Then $\text{\textlbrackdbl} \varphi_1 \text{ :o } \varphi_2 \text{\textrbrackdbl}(\bar{S}) \subseteq \text{\textlbrackdbl} \mathcal{A}_{:o} \text{\textrbrackdbl}(\bar{S})$.
+\\\\
+T.P. $\text{\textlbrackdbl} \mathcal{A}_{:o} \text{\textrbrackdbl}(\bar{S}) \subseteq \text{\textlbrackdbl} \varphi_1 \text{ :o } \varphi_2 \text{\textrbrackdbl}(\bar{S}) $
+\\
+Let $\rho_{:o}$ be a run of $\mathcal{A}_{:o}$ that accepts $C$ over $\bar{S}$:
+$$\rho_{:o}: q_0\xrightarrow{P_0/X_0}\dots\xrightarrow{\text{TRUE}/\emptyset}(q_i,p_0)\xrightarrow{P_i\land P'_0/X_i\cup X'_0}\dots\xrightarrow{}(q_{n},p_{j+1})\xrightarrow{\text{TRUE}/\emptyset}\dots\xrightarrow{P'_{n-1}/X'_{n-1}}p_{m}$$
+By construction we can define the runs $\rho_1$ and $\rho_2$ of $\mathcal{A}_1$ and $\mathcal{A}_2$ as follows:
+$$\rho_1: q_0\xrightarrow{P_0/X_0}q_1\xrightarrow{P_1/X_1}\dots\xrightarrow{P_{n-1}/X_{n-1}}q_n$$
+$$\rho_2: p_0\xrightarrow{P'_0/X'_0}p_1\xrightarrow{P'_1/X'_1}\dots\xrightarrow{P'_{m-1}/X'_{m-1}}p_m$$
+Where the complex event accepted by this runs we denote by $C_1$ and $C_2$. By construction its easy to see that $start(C_1) \leq start(C_2) \leq end(C_1) \leq end(C_2)$ and $C_1 \in \text{\textlbrackdbl} \varphi_1 \text{\textrbrackdbl}(\bar{S}) 
+\land C_2 \in \text{\textlbrackdbl} \varphi_2 \text{\textrbrackdbl}(\bar{S})$. We now prove that $C = C_1 \cup C_2$.
+\\\\
+Once again, by construction it holds true that start($C) =  \text{min}\{\text{start}(C_1$),start($C_2$)\}, end($C) = \text{max}\{\text{end}(C_1$), end($C_2$)\}, we are left to prove that $C(X) = C_1(X) \cup C_2(X)$ for every $X \in \textbf{X}$.
+\\\\
+Let interval(C) = $[s\dots r]$ with $0 \leq s$ and $r \leq m$, let $C(X) = k \in [s\dots r] \mid X \in L_{k}$ for all $X \in \textbf{X}$. For $k$ to belong to C(X) then the predicate $P_{k}$ must be triggered at some point during the run, this can happen on one of three segments of the run: when the transition are $\Delta_1$, $\Delta_2$ or $\Delta_{:o}$.
+\\\\
+If the predicate was triggered by a transition in $\Delta_1$ then $k \in C_1(X)$ and $k \in C(X)$. Similarly if it was a  transition in $\Delta_2$ then $k \in C_2(X)$ and $k \in C(X)$.
+\\\\
+If the predicate was triggered by a transition in $\Delta_{:o}$ (i.e.  $((q,p), P_1\land P_2, X_1\cup X_2, (q',p'))$ ) then, by what was said before, there are two scenarios:
+\\
+\begin{itemize}
+	\item  both $P_1 \neq \text{TRUE}$ and $P_2 \neq \text{TRUE}$, and both $X_1 \neq \emptyset$ and $X_2 \neq \emptyset$: therefore $k \in C_1(X), k \in C_2(X)$ and $k \in C(X)$.
+	\item $P_1 = \text{TRUE}$ and $X_1 = \emptyset$ or $P_2 = \text{TRUE}$ and $X_2 = \emptyset$: therefore $k \in C_2(X)$ and $k \in C(X)$ or $k \in C_1(X)$ and $k \in C(X)$.
+\end{itemize}
+From this we deduce that $k \in C_1(X)$ if and only if $k \in C(X)$, and $k \in C_2(X)$ if and only if $k \in C(X)$. Therefore, $C = C_1\cup C_2$.
+\\\\
+Then $\text{\textlbrackdbl} \mathcal{A}_{:o} \text{\textrbrackdbl}(\bar{S}) \subseteq \text{\textlbrackdbl} \varphi_1 \text{ :o } \varphi_2 \text{\textrbrackdbl}(\bar{S})$.
+\\\\
+Finally  $\text{\textlbrackdbl} \mathcal{A}_{:o} \text{\textrbrackdbl}(\bar{S}) = \text{\textlbrackdbl} \varphi_1 \text{ :o } \varphi_2 \text{\textrbrackdbl}(\bar{S}) $. 
+\begin{flushright}
+	$\Box$
+\end{flushright}
+ 
+ 
 
 %We present here the data structure, called Enumerable Compact Sets with Shifts, to compactly store the outputs of evaluating an annotated automaton over a straight-line program. This structure extends Enumerable Compact Sets (ECS) introduced in~\cite{DurandG07} (we note that a similar data structure for constant-delay enumeration was previously proposed in~\cite{BaganDG07}). Indeed, people have also used ECS extensions in~\cite{DurandG07,BucchiGQRV22}. This new version extends ECS by introducing a shift operator, which helps compactly move all outputs' positions with a single call. Although the shift nodes require a revision of the complete ECS model, it simplifies the evaluation algorithm in Section~\ref{sec:preliminaries} and achieves output-linear delay for enumerating all outputs. For completeness of presentation, this section goes through all main details as in~\cite{BaganDG07}.
 %
