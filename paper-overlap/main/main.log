@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.9.30)  29 OCT 2025 13:24
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.9.30)  11 NOV 2025 18:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1579,34 +1579,27 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [2.2{c:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{c:/texlive/2025/
 texmf-dist/fonts/enc/dvips/mnsymbol/MnSymbolF.enc}]
+Underfull \hbox (badness 10000) in paragraph at lines 23--40
 
-! LaTeX Error: There's no line here to end.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.34 \\\\
-         
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
+ []
 
 
-! LaTeX Error: There's no line here to end.
+Underfull \hbox (badness 10000) in paragraph at lines 23--40
 
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.35 T
-      he proof is by double containment.
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
+ []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 35--40
+Underfull \hbox (badness 10000) in paragraph at lines 23--40
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--40
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--40
 
  []
 
@@ -1618,40 +1611,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 51--57
  []
 
 
-! LaTeX Error: There's no line here to end.
+Underfull \hbox (badness 10000) in paragraph at lines 60--67
 
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.78 \\\\
-         
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
+ []
 
 
-! LaTeX Error: There's no line here to end.
 
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.79 T
-      hen $\text{\textlbrackdbl} \mathcal{A}_{:o} \text{\textrbrackdbl}(\bar...
-
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 79--82
+[4.4]
+Underfull \hbox (badness 10000) in paragraph at lines 71--74
 
  []
 
 ) (../sections/concl.tex)
-
-[4.4]
 
 [5.5] (./main.bbl)
 
@@ -1915,11 +1886,11 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: ED17A0C3B0C2FE17586A0CA3D44D5514;1359.
  ) 
 Here is how much of TeX's memory you used:
- 39283 strings out of 467748
- 746773 string characters out of 5431138
- 1163873 words of memory out of 5000000
- 66927 multiletter control sequences out of 15000+600000
- 790874 words of font info for 319 fonts, out of 8000000 for 9000
+ 39286 strings out of 467748
+ 746778 string characters out of 5431138
+ 1163862 words of memory out of 5000000
+ 66925 multiletter control sequences out of 15000+600000
+ 791123 words of font info for 322 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  89i,13n,94p,1117b,890s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2025/texmf-dist/fonts/type1/public/fontawesome5/FontAwesome5Free-
@@ -1947,10 +1918,10 @@ fb><c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb><c:/texlive/2
 ts/type1/public/lm/lmtt9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/ams
 fonts/symbols/msam10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfont
 s/symbols/msbm10.pfb>
-Output written on main.pdf (10 pages, 552626 bytes).
+Output written on main.pdf (10 pages, 554529 bytes).
 PDF statistics:
- 321 PDF objects out of 1000 (max. 8388607)
- 232 compressed objects within 3 object streams
- 32 named destinations out of 1000 (max. 500000)
+ 317 PDF objects out of 1000 (max. 8388607)
+ 229 compressed objects within 3 object streams
+ 31 named destinations out of 1000 (max. 500000)
  95829 words of extra memory for PDF output out of 106986 (max. 10000000)
 
