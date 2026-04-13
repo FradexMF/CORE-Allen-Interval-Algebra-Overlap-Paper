@@ -1,17 +1,36 @@
+% !TeX spellcheck = en_GB
 %!TEX root = ../main/main.tex
 
 In this section we introduce an extension to the semantics of CEL, namely we introduce a new operator using [allen interval algebra] \textit{overlap}. 
 We then extend the formal computational model for evaluating CEL formulas and prove its correctness. We start by recalling the notion of a CEA to later extend the proof.
 
-\paragraph{Complex Event Automata} A \textit{Complex Event Automata} (CEA) is a tuple:
-\[
+\paragraph{Complex Event Automata} A \textit{Complex Event Automata} (CEA) (with $\epsilon$-transitions) is a tuple $
 \mathcal{A} = (Q,\textbf{P},\textbf{X},\Delta,q_0,F)
-\]
-where $Q$ is a finite set of states, \textbf{P} is the set of predicates, \textbf{X} is a finite set of variables, $\Delta \subseteq Q \times \textbf{P} \times 2^{\textbf{X}} \times Q$ is a finite relation (called the transition relation), $q_0 \in Q$ is the inital state, and $F$ is the set of final states. A run $\rho$ of $\mathcal{A}$ over the stream $\Stream = e_1 e_2 \dots e_n$ from position $i$ to $j$ is a sequence:
- \[ \rho := p_i \xrightarrow{P_i/L_i} p_{i+1} \xrightarrow{P_{i+1}/L_{i+1}} p_{i+2} \xrightarrow{P_{i+2}/L_{i+2}} \dots \xrightarrow{P_{j}/L_{j}} p_{j+1} \]
-where $p_i = q_0$, $(p_k, P_k, L_k, p_{k+1}) \in \Delta$, and $e_k \vDash P_k$ for all $k \in [i..j]$. We say that the run is accepting if $p_{j+1} \in F$. A run $\rho$ from positions $i$ to $j$ like above defines the complex event $C_\rho = (i, j, \mu_\rho)$ such that $\mu_\rho(X) = \{k \in [i..j] \mid X \in L_k\}$ for every $X \in$ \textbf{X}. Note that the starting and ending positions $i, j$ of the run define the interval of the complex event, and the labels $L_k \subseteq$ \textbf{X} define the mapping $\mu_\rho$ of $C_\rho$. We  define the set of all complex events of $\mathcal{A}$ over $\Stream$ as:  
-\[ \text{\textlbrackdbl} \mathcal{A} \text{\textrbrackdbl}(\Stream) = \{C_\rho \mid \rho \text{ is an accepting run of }\mathcal{A} \text{ over }\Stream\} \]
+$
+where $Q$ is a finite set of states, $\textbf{P}$ is the set of predicates, $\textbf{X}$ is a finite set of variables, 
+\[
+\Delta \ \subseteq \ Q \times (\textbf{P} \times 2^{\textbf{X}} \cup \{\epsilon\}) \times Q  
+\] is a finite relation (called the transition relation), $q_0 \in Q$ is the inital state, and $F$ is the set of final states. A transition of the form $(p, P, L, q)$ is a \emph{reading} transition and a transition of the form $(p, \epsilon, q)$ is an $\epsilon$-transition. As usual, the automaton with an $\epsilon$-transition can change its state without consuming any event of the stream.
 
+Let $\Stream = e_1 e_2 \ldots e_n$ be a stream. A configuration of $\cA$ over $\Stream$ is a pair $(q, i) \in Q \times [n]$.
+A run $\rho$ of $\mathcal{A}$ over the stream $\Stream = e_1 e_2 \dots e_n$ from position $i$ to $j$ with $i, j \in [n]$ and $i \leq j$ is a sequence of configurations and transitions of the form:
+ \[ 
+ \rho \ := \ (p_1, i_1) \xrightarrow{t_1} (p_{2}, i_2) \xrightarrow{t_2} \dots \xrightarrow{t_k} (p_{k+1}, i_{k+1}) 
+ \]
+such that $t_\ell \in \textbf{P} \times 2^{\textbf{X}} \cup \{\epsilon\}$ for every $\ell \in [k]$, $p_1 = q_0$, $i_1 = i$, $i_{k+1} = j+1$, and, for every $\ell \in [k]$: 
+\begin{itemize}
+	\item if $t_\ell = (P, L)$, then $i_{\ell+1} = i_{\ell}+1$, $(p_{\ell}, P, L, p_{\ell+1}) \in \Delta$ and $e_{i_{\ell}} \vDash P$;
+	\item if $t_\ell = \epsilon$, then $i_{\ell+1} = i_{\ell}$ and $(p_{\ell}, \epsilon, p_{\ell+1}) \in \Delta$.
+\end{itemize}
+We say that the run is accepting if $p_{k+1} \in F$.
+For $t \in (\textbf{P} \times 2^{\textbf{X}} \cup \{\epsilon\})$ and $\ell \in [n]$ we define the complex event $\operatorname{ce}(t, \ell)$ of $\Stream$ such that $\operatorname{ce}(t, \ell) = (\ell, \ell, \{X \mapsto \{\ell\} \mid X \in L\})$ if $t = (P,L)$ and $(\ell, \ell, \emptyset)$, otherwise.
+Then a run $\rho$ from positions $i$ to $j$ like above defines the complex event $C_\rho$ such that:
+\[
+C_\rho \ := \ \operatorname{ce}(t_1, i_1) \cup \operatorname{ce}(t_2, i_2) \cup \ldots \cup \operatorname{ce}(t_k, i_k)
+\]
+Note that when $t_\ell = \epsilon$, then the transition captures no event, but when $t_\ell = (P, L)$ the transition captures the event $e_{i_\ell}$ in each variable $X \in L$. We  define the set of all complex events of $\mathcal{A}$ over $\Stream$ as:  
+\[ \text{\textlbrackdbl} \mathcal{A} \text{\textrbrackdbl}(\Stream) = \{C_\rho \mid \rho \text{ is an accepting run of }\mathcal{A} \text{ over }\Stream\} \]
+\cristian{Hasta aquí la nueva definición de CEA con $\epsilon$-transiciones.}
 
 \paragraph{Overlap operation} We present then the overlap operator for CEL as with the following definition:
 
