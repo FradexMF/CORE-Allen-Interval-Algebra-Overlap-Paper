@@ -23,6 +23,13 @@
 \usepackage{tikz}
 \usetikzlibrary{automata, graphs,positioning,chains,arrows,snakes,decorations.pathmorphing}
 
+%%%% TO CENTER THE EQUATIONS IN LIPICS
+\makeatletter
+\@fleqnfalse
+\@mathmargin\@centering
+\makeatother
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %			COMMENTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -56,6 +63,16 @@
 
 \renewcommand{\paragraph}[1]{\smallskip
 	\noindent\textbf{#1}.}
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%			Streams, CER 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\Stream}{\bar{S}}
+\newcommand{\cstart}{\operatorname{start}}
+\newcommand{\cend}{\operatorname{end}}
+\newcommand{\cinterval}{\operatorname{interval}}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %			ALGORITHMS
