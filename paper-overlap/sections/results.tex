@@ -1,102 +1,113 @@
 % !TeX spellcheck = en_GB
 %!TEX root = ../main/main.tex
-
-In this section we introduce an extension to the semantics of CEL, namely we introduce a new operator using [allen interval algebra] \textit{overlap}. 
-We then extend the formal computational model for evaluating CEL formulas and prove its correctness. We start by recalling the notion of a CEA to later extend the proof.
+In this section we introduce an extension to the semantics of CEL, namely we introduce a new operator using \textit{Allen interval algebra} \textit{overlap}. 
+We then extend the formal computational model for evaluating CEL formulas and prove its correctness. We start by recalling the notion of a $\cA$ to later extend the proof.
 
 \paragraph{Complex Event Automata} A \textit{Complex Event Automata} (CEA) (with $\epsilon$-transitions) is a tuple $
 \mathcal{A} = (Q,\textbf{P},\textbf{X},\Delta,q_0,F)
 $
-where $Q$ is a finite set of states, $\textbf{P}$ is the set of predicates, $\textbf{X}$ is a finite set of variables, 
+where $Q$ is a finite set of states, $\SETP$ is the set of predicates, $\SETX$ is a finite set of variables,
 \[
-\Delta \ \subseteq \ Q \times (\textbf{P} \times 2^{\textbf{X}} \cup \{\epsilon\}) \times Q  
+\Delta \subseteq Q \times (\SETP \times 2^{\SETX} \cup \{\epsilon\}) \times Q  
 \] is a finite relation (called the transition relation), $q_0 \in Q$ is the inital state, and $F$ is the set of final states. A transition of the form $(p, P, L, q)$ is a \emph{reading} transition and a transition of the form $(p, \epsilon, q)$ is an $\epsilon$-transition. As usual, the automaton with an $\epsilon$-transition can change its state without consuming any event of the stream.
 
 Let $\Stream = e_1 e_2 \ldots e_n$ be a stream. A configuration of $\cA$ over $\Stream$ is a pair $(q, i) \in Q \times [n]$.
-A run $\rho$ of $\mathcal{A}$ over the stream $\Stream = e_1 e_2 \dots e_n$ from position $i$ to $j$ with $i, j \in [n]$ and $i \leq j$ is a sequence of configurations and transitions of the form:
- \[ 
- \rho \ := \ (p_1, i_1) \xrightarrow{t_1} (p_{2}, i_2) \xrightarrow{t_2} \dots \xrightarrow{t_k} (p_{k+1}, i_{k+1}) 
- \]
-such that $t_\ell \in \textbf{P} \times 2^{\textbf{X}} \cup \{\epsilon\}$ for every $\ell \in [k]$, $p_1 = q_0$, $i_1 = i$, $i_{k+1} = j+1$, and, for every $\ell \in [k]$: 
+A run $\rho$ of $\cA$ over the stream $\Stream = e_1 e_2 \dots e_n$ from position $i$ to $j$ with $i, j \in [n]$ and $i \leq j$ is a sequence of configurations and transitions of the form:
+\[ 
+\rho := (p_1, i_1) \xrightarrow{t_1} (p_{2}, i_2) \xrightarrow{t_2} \dots \xrightarrow{t_k} (p_{k+1}, i_{k+1}) 
+\]
+such that $t_\ell \in \SETP \times 2^{\SETX} \cup \{\epsilon\}$ for every $\ell \in [k]$, $p_1 = q_0$, $i_1 = i$, $i_{k+1} = j+1$, and, for every $\ell \in [k]$:
 \begin{itemize}
 	\item if $t_\ell = (P, L)$, then $i_{\ell+1} = i_{\ell}+1$, $(p_{\ell}, P, L, p_{\ell+1}) \in \Delta$ and $e_{i_{\ell}} \vDash P$;
 	\item if $t_\ell = \epsilon$, then $i_{\ell+1} = i_{\ell}$ and $(p_{\ell}, \epsilon, p_{\ell+1}) \in \Delta$.
 \end{itemize}
 We say that the run is accepting if $p_{k+1} \in F$.
-For $t \in (\textbf{P} \times 2^{\textbf{X}} \cup \{\epsilon\})$ and $\ell \in [n]$ we define the complex event $\operatorname{ce}(t, \ell)$ of $\Stream$ such that $\operatorname{ce}(t, \ell) = (\ell, \ell, \{X \mapsto \{\ell\} \mid X \in L\})$ if $t = (P,L)$ and $(\ell, \ell, \emptyset)$, otherwise.
+For $t \in (\SETP \times 2^{\SETX} \cup \{\epsilon\})$ and $\ell \in [n]$ we define the complex event $\ce(t, \ell)$ of $\Stream$ such that $\ce(t, \ell) = (\ell, \ell, \{X \mapsto \{\ell\} \mid X \in L\})$ if $t = (P,L)$ and $(\ell, \ell, \emptyset)$, otherwise.
 Then a run $\rho$ from positions $i$ to $j$ like above defines the complex event $C_\rho$ such that:
 \[
-C_\rho \ := \ \operatorname{ce}(t_1, i_1) \cup \operatorname{ce}(t_2, i_2) \cup \ldots \cup \operatorname{ce}(t_k, i_k)
+C_\rho := \ce(t_1, i_1) \cup \ce(t_2, i_2) \cup \dots \cup \ce(t_k, i_k)
 \]
-Note that when $t_\ell = \epsilon$, then the transition captures no event, but when $t_\ell = (P, L)$ the transition captures the event $e_{i_\ell}$ in each variable $X \in L$. We  define the set of all complex events of $\mathcal{A}$ over $\Stream$ as:  
-\[ \text{\textlbrackdbl} \mathcal{A} \text{\textrbrackdbl}(\Stream) = \{C_\rho \mid \rho \text{ is an accepting run of }\mathcal{A} \text{ over }\Stream\} \]
+Note that when $t_\ell = \epsilon$, then the transition captures no event, but when $t_\ell = (P, L)$ the transition captures the event $e_{i_\ell}$ in each variable $X \in L$. We define the set of all complex events of $\cA$ over $\Stream$ as:  
+\[ \sem{\cA}(\Stream) = \{C_\rho \mid \rho \text{ is an accepting run of } \cA \text{ over } \Stream\} \]
+
 \cristian{Hasta aquí la nueva definición de CEA con $\epsilon$-transiciones.}
 
 \paragraph{Overlap operation} We present then the overlap operator for CEL as with the following definition:
 
-\[ \begin{aligned}
-\text{\textlbrackdbl} \varphi_1 \text{ :o } \varphi_2 \text{\textrbrackdbl}(\Stream)
-&= \{C_1 \cup C_2 \mid C_1 \in \text{\textlbrackdbl} \varphi_1 \text{\textrbrackdbl}(\Stream) 
-\land C_2 \in \text{\textlbrackdbl} \varphi_2 \text{\textrbrackdbl}(\Stream)  \\& \hspace*{12pt} \land
-start(C_1) \leq start(C_2) \leq end(C_1) \leq end(C_2)\}
+\[ 
+\begin{aligned}
+	\sem{\varphi_1 \overlap \varphi_2}(\Stream)
+	&= \{C_1 \cup C_2 \mid C_1 \in \sem{\varphi_1}(\Stream) 
+	\land C_2 \in \sem{\varphi_2}(\Stream) \\
+	&\quad \land \cstart(C_1) \leq \cstart(C_2) \leq \cend(C_1) \leq \cend(C_2)\}
 \end{aligned}
- \]
- 
- \cristian{TODO: agregar un ejemplo de overlap.}
-%$$ = $$
-We also know from \cite{BucchiGQRV22,GrezRUV21} the following theorem:
-\cristian{Usar bibtex y \texttt{$\backslash$cite\{...\}} para citar trabajos.}
-\begin{theorem}[CEA and CEL equivalence~\cite{BucchiGQRV22,GrezRUV21}] \label{theo:mytheorem}
-	For every CEL formula $\varphi$ there exists a CEA $\mathcal{A}_\varphi$ such that \textlbrackdbl $\varphi$\textrbrackdbl($\Stream$) $ = $ \textlbrackdbl $\mathcal{A}_\varphi$\textrbrackdbl ($\Stream$) for every stream $\Stream$
-\end{theorem}
-Let $\varphi_1$ and $\varphi_2$ formulas in CEL. Then we show that there exists a CEA $\mathcal{A}_{:o}$  such that:
-\[
-\text{\textlbrackdbl} \varphi_1 \text{ :o } \varphi_2 \text{\textrbrackdbl}(\Stream) = \text{\textlbrackdbl} \mathcal{A}_{:o} \text{\textrbrackdbl}(\Stream)
 \]
-Lets assume then that there exists an automaton that satisfies the previous property for $\varphi_1$ and $\varphi_2$, therefore we know there exists $\mathcal{A}_{\varphi_1} = (Q_1,\text{\textbf{P}}_1,\text{\textbf{X}}_1,\Delta_1,q_0,F_1)$ and $\mathcal{A}_{\varphi_2} = (Q_2,\text{\textbf{P}}_2,\text{\textbf{X}}_2,\Delta_2,p_0,F_2)$. 
-Then the construction for the overlap operator is as folllows.
+ 
+\paragraph{Example} Suppose we have sensors in a park monitoring humidity ($H$) and temperature ($T$). Consider a stream $\Stream = e_1 e_2 e_3 e_4$ where the event types are $\type(e_1) = H$, $\type(e_2) = T$, $\type(e_3) = H$, and $\type(e_4) = T$. 
 
-Let $\mathcal{A}_{:o}$ be a CEA where $\mathcal{A}_{:o} = (Q_{:o}, P_{:o}, X_{:o},\Delta_{:o},q_0,F_2)$
+Let $\varphi_1 = H ; H$ be a formula detecting a non contiguous sequence of humidity readings, and $\varphi_2 = T ; T$ be a formula detecting a non contiguous sequence of temperature readings.
 \begin{itemize}
-	\item $Q_{:o} = Q_1\uplus Q_2\uplus Q_1\times Q_2$, 
-	\item $P_{:o} = \textbf{P}_1\cup\textbf{P}_2$,
-	\item $X_{:o} = \textbf{X}_1\cup\textbf{X}_2$ and
+	\item The set $\sem{\varphi_1}(\Stream)$ contains a complex event $C_1$ representing the humidity sequence at positions $1$ and $3$, with $\cinterval(C_1) = [1..3]$. Thus, $\cstart(C_1) = 1$ and $\cend(C_1) = 3$.
+	\item The set $\sem{\varphi_2}(\Stream)$ contains a complex event $C_2$ representing the temperature sequence at positions $2$ and $4$, with $\cinterval(C_2) = [2..4]$. Thus, $\cstart(C_2) = 2$ and $\cend(C_2) = 4$.
+\end{itemize}
+
+Since the overlap condition $\cstart(C_1) \leq \cstart(C_2) \leq \cend(C_1) \leq \cend(C_2)$ holds (i.e., $1 \leq 2 \leq 3 \leq 4$), the complex event $C = C_1 \cup C_2$ is in the result of $\sem{\varphi_1 \overlap \varphi_2}(\Stream)$. This resulting complex event captures the period where a humidity rise was followed by a temperature rise that continued after the humidity stabilized.
+
+\paragraph{CEA and CEL equivalence} We also know from \cite{BucchiGQRV22,GrezRUV21} the following theorem:
+\begin{theorem}[CEA and CEL equivalence~\cite{BucchiGQRV22,GrezRUV21}] \label{theo:mytheorem}
+	For every CEL formula $\varphi$ there exists a CEA $\cA_\varphi$ such that $\sem{\varphi}(\Stream) = \sem{\cA_\varphi}(\Stream)$ for every stream $\Stream$.
+\end{theorem}
+
+Let $\varphi_1$ and $\varphi_2$ be formulas in CEL. Then we show that there exists a CEA $\cAoverlap$ such that:
+\[
+\sem{\varphi_1 \overlap \varphi_2}(\Stream) = \sem{\cAoverlap}(\Stream)
+\]
+Lets assume then that there exists an automaton that satisfies the previous property for $\varphi_1$ and $\varphi_2$, therefore we know there exists $\cA_{\varphi_1} = (Q_1, \SETP_1, \SETX_1, \Delta_1, q_0, F_1)$ and $\cA_{\varphi_2} = (Q_2, \SETP_2, \SETX_2, \Delta_2, p_0, F_2)$. 
+Then the construction for the overlap operator is as follows.
+
+Let $\cAoverlap$ be a CEA where $\cAoverlap = (\Qoverlap, \Poverlap, \Xoverlap, \Doverlap, q_0, F_2)$ with:
+\begin{itemize}
+	\item $\Qoverlap = Q_1 \uplus Q_2 \uplus (Q_1 \times Q_2)$, 
+	\item $\Poverlap = \SETP_1 \cup \SETP_2$,
+	\item $\Xoverlap = \SETX_1 \cup \SETX_2$ and
 	\item $
-	\begin{array}[t]{rcl}
-		\Delta_{:o} & =  & \Delta_1\uplus\Delta_2 \uplus \\
-		& &  \{(q,P_1,L_1,(q',p_0)) \ \mid (q,P_1,L_1,q')\in \Delta_1, (q,p_0) \in Q_1\times Q_2\} \ \ \uplus \\
-		& & \{((q,p),P_1\land P_2, L_1\cup L_2, (q',p')) \  \mid \!\! \begin{array}[t]{l}
-			(q,P_1,L_1,q')\in \Delta_1, (p,P_2,L_2,p')\in \Delta_2, \\
-			(q,p), (q', p')\in Q_1 \times Q_2 \} \ \  \uplus
-		\end{array}
-		  \\
-		& & \{((q,p),P_2,L_2,p') \mid q\in F_1, (p,P_2,L_2,p') \in \Delta_2\}
-	\end{array}
+	\begin{aligned}[t]
+		\Doverlap = \Delta_1 & \uplus \Delta_2 \\
+		& \uplus \{(q, \epsilon, (q, p_0)) \mid q \in Q_1\} \\
+		& \uplus \{((q, p), P_1 \land P_2, L_1 \cup L_2, (q', p')) \mid (q, P_1, L_1, q') \in \Delta_1 \land (p, P_2, L_2, p') \in \Delta_2\} \\
+		& \uplus \{((q, p), \epsilon, p) \mid q \in F_1\}
+	\end{aligned}
 	$
 \end{itemize}
 \cristian{Revisado hasta aqui.}
 Intuitively, given an stream S we capture the eventes given $\varphi_1$, and at some point (the overlap) we start capturing the events for $\varphi_2$ too.
 %We also recall that the base construction of a CEA $\mathcal{A}_R$ with $R \in$ \textbf{T} an event type, is as follows: $\mathcal{A}_\varphi = (\{q_1,q_2\},\Delta_\varphi,\{q_1\},\{q_2\})$ with $\Delta_\varphi = \{(q_1,R,\mu(R),q_2),(q_1,\text{TRUE},\emptyset,q_1)\}$. Because of this we note that in $\Delta_{:o}$ the transitions that represent the overlapped section mark correctly when $P_1$ and $P_2$ are triggered simultaneously by an event, and they too mark correctly when only one of the predicates is triggered. This conclusion comes from the fact that when we define  $\{((q,p),P_1\land P_2, X_1\cup X_2, (q',p'))\} $ where $ (q,P_1,X_1,q')\in \Delta_1, (p,P_2,X_2,p')\in \Delta_2$ the transitions in both $\Delta_1$ and $\Delta_2$ include the case $(q,$TRUE$,\emptyset,q)$, therefore when only one of the predicates is triggered there always exists a transition in $\Delta_{:o}$ defined as $((q,p),P_1\cap \text{TRUE},X_1\cup \emptyset,(q',p))$ where $(q,P_1,X_1,q')\in \Delta_1$, $(p,$TRUE$,\emptyset,p) \in \Delta_2$ and $(q,p),(q',p)\in Q_1 \times Q_2$.
-\\\\
+
+\paragraph{Proof}
 The proof is by double containment. 
-\\
-T.P. $\text{\textlbrackdbl} \varphi_1 \text{ :o } \varphi_2 \text{\textrbrackdbl}(\Stream) \subseteq \text{\textlbrackdbl} \mathcal{A}_{:o} \text{\textrbrackdbl}(\Stream)$
-\\\\
-Let $C_1\cup C_2 \in \text{\textlbrackdbl} \varphi_1 \text{ :o } \varphi_2 \text{\textrbrackdbl}(\Stream)$ where $C_i \in \text{\textlbrackdbl} \varphi_i\text{\textrbrackdbl}(\Stream) = \text{\textlbrackdbl} \mathcal{A}_{\varphi_i} \text{\textrbrackdbl}(\Stream)$ with $i \in \{1,2\}$. From this we extend that there exists a run on both $\mathcal{A}_{\varphi_1}$ and $\mathcal{A}_{\varphi_2}$ that accept $C_1$ and $C_2$ respectively. This is:
-\[ \rho_1: q_0\xrightarrow{P_0/L_0}q_1\xrightarrow{P_1/L_1}\dots\xrightarrow{P_{n-1}/L_{n-1}}q_n \]
-\[ \rho_2: p_0\xrightarrow{P'_0/L'_0}p_1\xrightarrow{P'_1/L'_1}\dots\xrightarrow{P'_{m-1}/L'_{m-1}}p_m \]
-With $q_n \in F_1$ and $p_m \in F_2$. By the previous construction of $\mathcal{A}_{:o}$ we can start building a run $\rho_{:o}$ as follows:
-\[ \rho_{:o}: q_0\xrightarrow{P_0/L_0}q_1\xrightarrow{P_1/L_1}\dots\xrightarrow{P_{i-1}/L_{i-1}}q_i \]
-with $i \leq n$. By definition we know that $start(C_1) \leq start(C_2)$ therefore we can extend the run as such:
-\[ \rho_{:o}:\dots q_i\xrightarrow{P_i/L_i}(q_{i+1},p_0) \]
-And then by construction:
-\[ \rho_{:o}:\dots(q_{i+1},p_0)\xrightarrow{P_{i+1}\land P'_0/L_{i+1}\cup L'_0}(q_{i+2},p_1)\xrightarrow{P_{i+2}\land P'_1/L_{i+2}\cup L'_1}\dots\xrightarrow{P_{n-1}\land P'_{j-1}/L_{n-1}\cup L'_{j-1}}(q_n,p_j) \]
-With $j \leq m$ and $q_n \in F_1$. By definition we know that $end(C_1) \leq end(C_2)$ therefore we can extend the run once more:
-\[ \rho_{:o}:\dots(q_n,p_j)\xrightarrow{P'_j/L'_j}p_{j+1} \]
-Finally then, by construction:
-\[ \rho_{:o}:\dots p_{j+1}\xrightarrow{P'_{j+1}/L'_{j+1}}p_{j+2}\xrightarrow{P'_{j+2}/L'_{j+2}}\dots\xrightarrow{P'_{n-1}/L'_{n-1}}p_n \]
-Because $p_n \in F_2$, then $\rho_{:o}$ is a run of $\mathcal{A}_{:o}$ that accepts $C_1\cup C_2$ over a stream $\Stream$. Then $\text{\textlbrackdbl} \varphi_1 \text{ :o } \varphi_2 \text{\textrbrackdbl}(\Stream) \subseteq \text{\textlbrackdbl} \mathcal{A}_{:o} \text{\textrbrackdbl}(\Stream)$.
-\\\\
+
+T.P. $\sem{\varphi_1 \overlap \varphi_2}(\Stream) \subseteq \sem{\cAoverlap}(\Stream)$
+
+Let $C_1 \cup C_2 \in \sem{\varphi_1 \overlap \varphi_2}(\Stream)$ where $C_i \in \sem{\varphi_i}(\Stream) = \sem{\cA_{\varphi_i}}(\Stream)$ for $i \in \{1,2\}$. From this, we know there exist accepting runs $\rho_1$ and $\rho_2$ in $\cA_{\varphi_1}$ and $\cA_{\varphi_2}$ respectively.
+
+Let $i_1, j_1$ be the start and end positions of $C_1$, and $i_2, j_2$ be the start and end positions of $C_2$. By the definition of overlap, we have $i_1 \leq i_2 \leq j_1 \leq j_2$.
+The runs are:
+\[ \rho_1: q_0 \xrightarrow{(P_{i_1}, L_{i_1})} q_1 \xrightarrow{(P_{i_1+1}, L_{i_1+1})} \dots \xrightarrow{(P_{j_1}, L_{j_1})} q_{n} \]
+\[ \rho_2: p_0 \xrightarrow{(P'_{i_2}, L'_{i_2})} p_1 \xrightarrow{(P'_{i_2+1}, L'_{i_2+1})} \dots \xrightarrow{(P'_{j_2}, L'_{j_2})} p_{m} \]
+With $q_n \in F_1$ and $p_m \in F_2$. Using the construction of $\cAoverlap$, we build a run $\rho_{\overlap}$ as follows:
+
+First, the run follows $\Delta_1$ until position $i_2-1$:
+\[ \rho_{\overlap}: q_0 \xrightarrow{(P_{i_1}, L_{i_1})} \dots \xrightarrow{(P_{i_2-1}, L_{i_2-1})} q_{k} \]
+Second, At position $i_2$, we use an $\epsilon$-transition to enter the product state:
+\[ \rho_{\overlap}: \dots q_{k} \xrightarrow{\epsilon} (q_k, p_0) \]
+Third, We then use the transitions in $(Q_1 \times Q_2)$ from position $i_2$ until $j_1$:
+\[ \rho_{\overlap}: \dots (q_{k}, p_0) \xrightarrow{(P_{i_2} \land P'_{i_2}, L_{i_2} \cup L'_{i_2})} \dots \xrightarrow{(P_{j_1} \land P'_{r}, L_{j_1} \cup L'_{r})} (q_n, p_{r+1}) \]
+Since $q_n \in F_1$, we can follow the construction and extend the run, using an $\epsilon$-transition to exit the product state and continue only in $Q_2$:
+\[ \rho_{\overlap}: \dots (q_n, p_{r+1}) \xrightarrow{\epsilon} p_{r+1} \]
+Finally, we follow the remaining transitions of $\Delta_2$ until $j_2$:
+\[ \rho_{\overlap}: \dots p_{r+1} \xrightarrow{(P'_{r+2}, L'_{r+2})} \dots \xrightarrow{(P'_{j_2}, L'_{j_2})} p_m \]
+Because $p_n \in F_2$, then $\rho_{:o}$ is a run of $\mathcal{A}_{:o}$ that accepts $C_1\cup C_2$ over a stream $\Stream$. Therefore, $\sem{\varphi_1 \overlap \varphi_2}(\Stream) \subseteq \sem{\cAoverlap}(\Stream)$.
+\Fernando{Hasta aqui he ajustado con macros y la demostracion con epsilon}
 T.P. $\text{\textlbrackdbl} \mathcal{A}_{:o} \text{\textrbrackdbl}(\Stream) \subseteq \text{\textlbrackdbl} \varphi_1 \text{ :o } \varphi_2 \text{\textrbrackdbl}(\Stream) $
 \\
 Let $\rho_{:o}$ be a run of $\mathcal{A}_{:o}$ that accepts $C$ over $\Stream$:
