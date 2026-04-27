@@ -67,15 +67,14 @@ Then the construction for the overlap operator is as follows.
 
 Let $\cAoverlap$ be a CEA where $\cAoverlap = (\Qoverlap, \Poverlap, \Xoverlap, \Doverlap, q_0, F_2)$ with:
 \begin{itemize}
-	\item $\Qoverlap = Q_1 \uplus Q_2 \uplus (Q_1 \times Q_2)$, 
-	\item $\Poverlap = \SETP_1 \cup \SETP_2$,
-	\item $\Xoverlap = \SETX_1 \cup \SETX_2$ and
 	\item $
 	\begin{aligned}[t]
 		\Doverlap = \Delta_1 & \uplus \Delta_2 \\
 		& \uplus \{(q, \epsilon, (q, p_0)) \mid q \in Q_1\} \\
 		& \uplus \{((q, p), P_1 \land P_2, L_1 \cup L_2, (q', p')) \mid (q, P_1, L_1, q') \in \Delta_1 \land (p, P_2, L_2, p') \in \Delta_2\} \\
-		& \uplus \{((q, p), \epsilon, p) \mid q \in F_1\}
+		& \uplus \{((q, p), \epsilon, (q', p)) \mid (q, \epsilon, q') \in \Delta_1\}  \\
+		& \uplus \{((q, p), \epsilon, (q, p')) \mid (p, \epsilon, p') \in \Delta_2\}  \\
+		& \uplus \{((q, p), \epsilon, p) \mid q \in F_1\} 
 	\end{aligned}
 	$
 \end{itemize}
@@ -90,18 +89,24 @@ T.P. $\sem{\varphi_1 \overlap \varphi_2}(\Stream) \subseteq \sem{\cAoverlap}(\St
 
 Let $C_1 \cup C_2 \in \sem{\varphi_1 \overlap \varphi_2}(\Stream)$ where $C_i \in \sem{\varphi_i}(\Stream) = \sem{\cA_{\varphi_i}}(\Stream)$ for $i \in \{1,2\}$. From this, we know there exist accepting runs $\rho_1$ and $\rho_2$ in $\cA_{\varphi_1}$ and $\cA_{\varphi_2}$ respectively.
 
-Let $i_1, j_1$ be the start and end positions of $C_1$, and $i_2, j_2$ be the start and end positions of $C_2$. By the definition of overlap, we have $i_1 \leq i_2 \leq j_1 \leq j_2$.
+Let $i_1, j_1$ be $\cstart(C_1)$ and $\cend(C_1)$, and $i_2, j_2$ be $\cstart(C_2)$ and $\cend(C_2)$, respectively. By the definition of the overlap operator, we have $i_1 \leq i_2 \leq j_1 \leq j_2$.
 The runs are:
 \[ \rho_1: q_0 \xrightarrow{(P_{i_1}, L_{i_1})} q_1 \xrightarrow{(P_{i_1+1}, L_{i_1+1})} \dots \xrightarrow{(P_{j_1}, L_{j_1})} q_{n} \]
 \[ \rho_2: p_0 \xrightarrow{(P'_{i_2}, L'_{i_2})} p_1 \xrightarrow{(P'_{i_2+1}, L'_{i_2+1})} \dots \xrightarrow{(P'_{j_2}, L'_{j_2})} p_{m} \]
-With $q_n \in F_1$ and $p_m \in F_2$. Using the construction of $\cAoverlap$, we build a run $\rho_{\overlap}$ as follows:
-
-First, the run follows $\Delta_1$ until position $i_2-1$:
+With $q_n \in F_1$ and $p_m \in F_2$. Using the construction of $\cAoverlap$, we can build a run $\rho_{\overlap}$ over $\Stream$ as follows:
+\\
+First, the run follows $\rho_1$ using $\Delta_1$ until position $i_2-1$:
 \[ \rho_{\overlap}: q_0 \xrightarrow{(P_{i_1}, L_{i_1})} \dots \xrightarrow{(P_{i_2-1}, L_{i_2-1})} q_{k} \]
-Second, At position $i_2$, we use an $\epsilon$-transition to enter the product state:
+Then, at position $i_2$, we use an $\epsilon$-transition of the form $\{(q, \epsilon, (q, p_0)) \mid q \in Q_1\}$  to enter the product state:
 \[ \rho_{\overlap}: \dots q_{k} \xrightarrow{\epsilon} (q_k, p_0) \]
-Third, We then use the transitions in $(Q_1 \times Q_2)$ from position $i_2$ until $j_1$:
-\[ \rho_{\overlap}: \dots (q_{k}, p_0) \xrightarrow{(P_{i_2} \land P'_{i_2}, L_{i_2} \cup L'_{i_2})} \dots \xrightarrow{(P_{j_1} \land P'_{r}, L_{j_1} \cup L'_{r})} (q_n, p_{r+1}) \]
+We then use the transitions in $(Q_1 \times Q_2)$ from position $i_2$ until $j_1$, here for every transition in the original runs within the interval we do one of two things:
+\begin{itemize}
+	\item If both $\cA_{\varphi_1}$ and $\cA_{\varphi_2}$ take a reading transition at position $\ell \in [i_2..j_1]$, the run $\rho_{\overlap}$ uses:
+	$((q, p), P_1 \land P_2, L_1 \cup L_2, (q', p')) \in \Doverlap$.
+	\item w.l.o.g. If $\cA_{\varphi_1}$ takes an $\epsilon$-transition, the run $\rho_{\overlap}$ mimics this step by doing an epsilon transition using $\{((q, p), \epsilon, (q', p)) \mid (q, \epsilon, q') \in \Delta_1\}$.
+\end{itemize}
+By following these rules, we reach the configuration in $\rho_{\overlap}$:
+\[ \rho_{\overlap}: \dots ((q_{k}, p_0), i_2) \xrightarrow{t_{\overlap}} \dots \xrightarrow{t'_{\overlap}} ((q_n, p_{r+1}), j_1+1) \]
 Since $q_n \in F_1$, we can follow the construction and extend the run, using an $\epsilon$-transition to exit the product state and continue only in $Q_2$:
 \[ \rho_{\overlap}: \dots (q_n, p_{r+1}) \xrightarrow{\epsilon} p_{r+1} \]
 Finally, we follow the remaining transitions of $\Delta_2$ until $j_2$:
