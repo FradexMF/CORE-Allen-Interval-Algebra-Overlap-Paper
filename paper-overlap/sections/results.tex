@@ -82,7 +82,6 @@ Let $\cAoverlap$ be a CEA where $\cAoverlap = (\Qoverlap, \Poverlap, \Xoverlap, 
 Intuitively, given an stream S we capture the eventes given $\varphi_1$, and at some point (the overlap) we start capturing the events for $\varphi_2$ too.
 %We also recall that the base construction of a CEA $\mathcal{A}_R$ with $R \in$ \textbf{T} an event type, is as follows: $\mathcal{A}_\varphi = (\{q_1,q_2\},\Delta_\varphi,\{q_1\},\{q_2\})$ with $\Delta_\varphi = \{(q_1,R,\mu(R),q_2),(q_1,\text{TRUE},\emptyset,q_1)\}$. Because of this we note that in $\Delta_{:o}$ the transitions that represent the overlapped section mark correctly when $P_1$ and $P_2$ are triggered simultaneously by an event, and they too mark correctly when only one of the predicates is triggered. This conclusion comes from the fact that when we define  $\{((q,p),P_1\land P_2, X_1\cup X_2, (q',p'))\} $ where $ (q,P_1,X_1,q')\in \Delta_1, (p,P_2,X_2,p')\in \Delta_2$ the transitions in both $\Delta_1$ and $\Delta_2$ include the case $(q,$TRUE$,\emptyset,q)$, therefore when only one of the predicates is triggered there always exists a transition in $\Delta_{:o}$ defined as $((q,p),P_1\cap \text{TRUE},X_1\cup \emptyset,(q',p))$ where $(q,P_1,X_1,q')\in \Delta_1$, $(p,$TRUE$,\emptyset,p) \in \Delta_2$ and $(q,p),(q',p)\in Q_1 \times Q_2$.
 
-\Fernando{Ajustada la primera contención para usar la configuracion y una run generica}
 \paragraph{Proof}
 The proof is by double containment. 
 
@@ -125,28 +124,52 @@ Since $q_{n} \in F_1$, the first formula is satisfied, and we are at step $b$. W
 Finally, the run follows the remaining transitions of $\rho_2$ from step $b$ to $m$ using $\Delta_2$:
 \[ \rho_{\overlap}: \dots (p_{b-1}, i_{n+1}) \xrightarrow{t'_b} \dots \xrightarrow{t'_m} (p_{m}, j_{m+1}) \]
 
-Because $p_{m} \in F_2$, the run $\rho_{\overlap}$ is accepting. Furthermore, by the construction of the iterative phase, every variable mapping $L$ captured by $\rho_1$ and $L'$ captured by $\rho_2$ are explicitly merged via $L \cup L'$. Thus, $C_{\rho_{\overlap}} = C_1 \cup C_2$. Therefore, $\sem{\varphi_1 \overlap \varphi_2}(\Stream) \subseteq \sem{\cAoverlap}(\Stream)$.\Fernando{for the next part: simply deconstruct the run into the correspodings for each $rho_1$ and $rho_2$}
-T.P. $\text{\textlbrackdbl} \mathcal{A}_{:o} \text{\textrbrackdbl}(\Stream) \subseteq \text{\textlbrackdbl} \varphi_1 \text{ :o } \varphi_2 \text{\textrbrackdbl}(\Stream) $
-\\
-Let $\rho_{:o}$ be a run of $\mathcal{A}_{:o}$ that accepts $C$ over $\Stream$:
-\[ \rho_{:o}: q_0\xrightarrow{P_0/L_0}\dots\xrightarrow{P_{i-1}/L_{i-1}}(q_i,p_0)\xrightarrow{P_i\land P'_0/L_i\cup L'_0}\dots\xrightarrow{}(q_{n},p_{j+1})\xrightarrow{P'_{j+1}/L'_{j+1}}\dots\xrightarrow{P'_{n-1}/L'_{n-1}}p_{m} \]
-By construction we can define the runs $\rho_1$ and $\rho_2$ of $\mathcal{A}_1$ and $\mathcal{A}_2$ as follows:
-\[ \rho_1: q_0\xrightarrow{P_0/L_0}q_1\xrightarrow{P_1/L_1}\dots\xrightarrow{P_{n-1}/L_{n-1}}q_n\]
-\[\rho_2: p_0\xrightarrow{P'_0/L'_0}p_1\xrightarrow{P'_1/L'_1}\dots\xrightarrow{P'_{m-1}/L'_{m-1}}p_m \]
-Where the complex event accepted by this runs we denote by $C_1$ and $C_2$. By construction its easy to see that $start(C_1) \leq start(C_2) \leq end(C_1) \leq end(C_2)$ and $C_1 \in \text{\textlbrackdbl} \varphi_1 \text{\textrbrackdbl}(\Stream) 
-\land C_2 \in \text{\textlbrackdbl} \varphi_2 \text{\textrbrackdbl}(\Stream)$. We now prove that $C = C_1 \cup C_2$ or equivalently, because start($C) =  \text{min}\{\text{start}(C_1$),start($C_2$)\}, end($C) = \text{max}\{\text{end}(C_1$), end($C_2$)\}, we are left to prove that $C(X) = C_1(X) \cup C_2(X)$ for every $X \in \textbf{X}$.
+Because $p_{m} \in F_2$, the run $\rho_{\overlap}$ is accepting. Furthermore, by the construction of the iterative phase, every variable mapping $L$ captured by $\rho_1$ and $L'$ captured by $\rho_2$ are explicitly merged via $L \cup L'$. Thus, $C_{\rho_{\overlap}} = C_1 \cup C_2$. Therefore, $\sem{\varphi_1 \overlap \varphi_2}(\Stream) \subseteq \sem{\cAoverlap}(\Stream)$.
 \\\\
-T.P. $C(X) \subseteq C_1(X) \cup C_2(X)$
-\\
-Lets recall that $C = (0,m,\mu)$ with [0..m] the interval of C. And  $\mu(X) = C(X) = \{k \in [0..m] \mid X \in L_k\}$ for every $X \in X_{:o}$, with $e_k \vDash P_{:o,k}$. There are 2 cases:
+T.P. $\sem{\cAoverlap}(\Stream) \subseteq \sem{\varphi_1 \overlap \varphi_2}(\Stream)$
+
+Let $C \in \sem{\cAoverlap}(\Stream)$. By definition, there exists an accepting run $\rho_{\overlap}$ in $\cAoverlap$ over $\Stream$ such that $C_{\rho_{\overlap}} = C$. 
+
+Because $\rho_{\overlap}$ starts at $q_0$ and ends at an accepting state $p_m \in F_2$, it must, by the construction of $\Doverlap$, contain exactly one $\epsilon$-transition $(q, \epsilon, (q, p_0))$ and exactly one $\epsilon$-transition $((q', p), \epsilon, p')$. Therefore, the run is strictly partitioned into three sections, one in $Q_1$, an overlap phase in $Q_1 \times Q_2$, and one in $Q_2$, lets call them prefix, overlap and suffix respectively.
+
+We then can separete $\rho_{\overlap}$ into two separate runs, $\rho_1$ and $\rho_2$, by isolating the components from the first and last partition.
 \begin{itemize}
-	\item $0 \leq k < i$: this is the first part of the run, therefore $P_{:o,k} = P_k$, with $P_k \in \textbf{P}_1$, and $L_{:o,k} = L_k$, with $L_k \subseteq  \textbf{X}_1$, therefore $e_k \vDash P_k$. Then $C(X) \subseteq C_1(X)$ in the interval [0..i-1]. Analogous for $j < k \leq m$, we have that $C(X) \subseteq C_2(X)$ in the interval [n+1..m]. 
-	\item $i \leq k \leq n$: middle part of the run, therefore $P_{:o,k} = P_k \land P'_k$ with $P'_k \in \textbf{P}_2$, and $L_{:o,k} = L_k\cup L'_k$ with $L'_k \subseteq \textbf{X}_2$, therefore $e_k \vDash P_k$ and $e_k \vDash P'_k$. Then $C(X) \subseteq C_1(X)\cup C_2(X)$ in the interval [i..n]. 
-\end{itemize} 
-Finally, $C(X) \subseteq C_1(X)\cup C_2(X)$ in the interval [0..m].
+	\item \textbf{Construction of $\rho_1$:} For every state in the prefix and overlap phases of $\rho_{\overlap}$, we take the first coordinate ($Q_1$). Because every transition in $\Doverlap$ that affects the first coordinate is strictly derived from $\Delta_1$, $\rho_1$ is a perfectly valid run in $\cA_{\varphi_1}$. Furthermore, because the overlap phase ends by taking $((q', p), \epsilon, p')$, where $q' \in F_1$, $\rho_1$ is an accepting run. Let $C_1$ be the complex event generated by $\rho_1$.
+	
+	\item \textbf{Construction of $\rho_2$:} For every state in the overlap and suffix phases of $\rho_{\overlap}$, we take the second coordinate ($Q_2$). Similarly, because the second coordinate is only modified by rules derived from $\Delta_2$, $\rho_2$ is a valid run in $\cA_{\varphi_2}$. Because $\rho_{\overlap}$ ultimately ends in $F_2$, $\rho_2$ is an accepting run. Let $C_2$ be the complex event generated by $\rho_2$.
+\end{itemize}
+
+By the equivalence theorem, since $\rho_1$ and $\rho_2$ are accepting runs, we have $C_1 \in \sem{\varphi_1}(\Stream)$ and $C_2 \in \sem{\varphi_2}(\Stream)$. 
+
+Finally, because $\rho_2$ begins exactly at $(q, \epsilon, (q, p_0))$ (which occurs at or after $\rho_1$ begins) and $\rho_1$ ends exactly at $((q', p), \epsilon, p')$ (which occurs at or before $\rho_2$ ends), the interval constraints are inherently satisfied: $\cstart(C_1) \leq \cstart(C_2) \leq \cend(C_1) \leq \cend(C_2)$. 
+Because the overlaped transitions in $\Doverlap$ explicitly construct the variable mapping via $L_1 \cup L_2$, it follows that $C = C_1 \cup C_2$, therefore, $C \in \sem{\varphi_1 \overlap \varphi_2}(\Stream)$.
+
+Finally, $\sem{\cAoverlap}(\Stream) \subseteq \sem{\varphi_1 \overlap \varphi_2}(\Stream)$.
 \\\\
-T.P.  $C_1(X) \cup C_2(X) \subseteq C(X)$
-\Fernando{Aqui sigo perdido. Si sigo una demostracion similar a la de arriba caigo en el caso de tener que demostrar que $e_k \vDash P_k$, cuando $i \leq k \leq n$  donde pueden haber dos casos: que $e_k \vDash P'_k$ o que $e_k \nvDash P'_k$, ¿no? lo cual no haria posible que $P_k\land P'_k$ se cumpla en todos los casos y por lo tanto $k$ no estaria en $C(X)$, por ende la union de $C_1$ y $C_2$ seria superset. Se que lo discutimos en la reu pasada, pero no me acuerdo como ir por este camino sin caer en necesitar que exista $TRUE/\emptyset$}
+Since both  $\sem{\cAoverlap}(\Stream) \subseteq \sem{\varphi_1 \overlap \varphi_2}(\Stream)$ and $\sem{\varphi_1 \overlap \varphi_2}(\Stream) \subseteq \sem{\cAoverlap}(\Stream)$, we conclude that $\sem{\varphi_1 \overlap \varphi_2}(\Stream) = \sem{\cAoverlap}(\Stream)$ $\blacksquare$
+
+\Fernando{Ahora si estaria todo ajustado usando el epsilon, construyendo o deconstruyendo las runs a partir de las anteriores}
+%T.P. $\text{\textlbrackdbl} \mathcal{A}_{:o} \text{\textrbrackdbl}(\Stream) \subseteq \text{\textlbrackdbl} \varphi_1 \text{ :o } \varphi_2 \text{\textrbrackdbl}(\Stream) $
+%\\
+%Let $\rho_{:o}$ be a run of $\mathcal{A}_{:o}$ that accepts $C$ over $\Stream$:
+%\[ \rho_{:o}: q_0\xrightarrow{P_0/L_0}\dots\xrightarrow{P_{i-1}/L_{i-1}}(q_i,p_0)\xrightarrow{P_i\land P'_0/L_i\cup L'_0}\dots\xrightarrow{}(q_{n},p_{j+1})\xrightarrow{P'_{j+1}/L'_{j+1}}\dots\xrightarrow{P'_{n-1}/L'_{n-1}}p_{m} \]
+%By construction we can define the runs $\rho_1$ and $\rho_2$ of $\mathcal{A}_1$ and $\mathcal{A}_2$ as follows:
+%\[ \rho_1: q_0\xrightarrow{P_0/L_0}q_1\xrightarrow{P_1/L_1}\dots\xrightarrow{P_{n-1}/L_{n-1}}q_n\]
+%\[\rho_2: p_0\xrightarrow{P'_0/L'_0}p_1\xrightarrow{P'_1/L'_1}\dots\xrightarrow{P'_{m-1}/L'_{m-1}}p_m \]
+%Where the complex event accepted by this runs we denote by $C_1$ and $C_2$. By construction its easy to see that $start(C_1) \leq start(C_2) \leq end(C_1) \leq end(C_2)$ and $C_1 \in \text{\textlbrackdbl} \varphi_1 \text{\textrbrackdbl}(\Stream) 
+%\land C_2 \in \text{\textlbrackdbl} \varphi_2 \text{\textrbrackdbl}(\Stream)$. We now prove that $C = C_1 \cup C_2$ or equivalently, because start($C) =  \text{min}\{\text{start}(C_1$),start($C_2$)\}, end($C) = \text{max}\{\text{end}(C_1$), end($C_2$)\}, we are left to prove that $C(X) = C_1(X) \cup C_2(X)$ for every $X \in \textbf{X}$.
+%\\\\
+%T.P. $C(X) \subseteq C_1(X) \cup C_2(X)$
+%\\
+%Lets recall that $C = (0,m,\mu)$ with [0..m] the interval of C. And  $\mu(X) = C(X) = \{k \in [0..m] \mid X \in L_k\}$ for every $X \in X_{:o}$, with $e_k \vDash P_{:o,k}$. There are 2 cases:
+%\begin{itemize}
+%	\item $0 \leq k < i$: this is the first part of the run, therefore $P_{:o,k} = P_k$, with $P_k \in \textbf{P}_1$, and $L_{:o,k} = L_k$, with $L_k \subseteq  \textbf{X}_1$, therefore $e_k \vDash P_k$. Then $C(X) \subseteq C_1(X)$ in the interval [0..i-1]. Analogous for $j < k \leq m$, we have that $C(X) \subseteq C_2(X)$ in the interval [n+1..m]. 
+%	\item $i \leq k \leq n$: middle part of the run, therefore $P_{:o,k} = P_k \land P'_k$ with $P'_k \in \textbf{P}_2$, and $L_{:o,k} = L_k\cup L'_k$ with $L'_k \subseteq \textbf{X}_2$, therefore $e_k \vDash P_k$ and $e_k \vDash P'_k$. Then $C(X) \subseteq C_1(X)\cup C_2(X)$ in the interval [i..n]. 
+%\end{itemize} 
+%Finally, $C(X) \subseteq C_1(X)\cup C_2(X)$ in the interval [0..m].
+%\\\\
+%T.P.  $C_1(X) \cup C_2(X) \subseteq C(X)$
+%\Fernando{Aqui sigo perdido. Si sigo una demostracion similar a la de arriba caigo en el caso de tener que demostrar que $e_k \vDash P_k$, cuando $i \leq k \leq n$  donde pueden haber dos casos: que $e_k \vDash P'_k$ o que $e_k \nvDash P'_k$, ¿no? lo cual no haria posible que $P_k\land P'_k$ se cumpla en todos los casos y por lo tanto $k$ no estaria en $C(X)$, por ende la union de $C_1$ y $C_2$ seria superset. Se que lo discutimos en la reu pasada, pero no me acuerdo como ir por este camino sin caer en necesitar que exista $TRUE/\emptyset$}
 %Once again, by construction it holds true that start($C) =  \text{min}\{\text{start}(C_1$),start($C_2$)\}, end($C) = \text{max}\{\text{end}(C_1$), end($C_2$)\}, we are left to prove that $C(X) = C_1(X) \cup C_2(X)$ for every $X \in \textbf{X}$.
 %\\\\
 %Let interval(C) = $[s\dots r]$ with $0 \leq s$ and $r \leq m$, let $C(X) = k \in [s\dots r] \mid X \in L_{k}$ for all $X \in \textbf{X}$. For $k$ to belong to C(X) then the predicate $P_{k}$ must be triggered at some point during the run, this can happen on one of three segments of the run: when the transition are $\Delta_1$, $\Delta_2$ or $\Delta_{:o}$.
