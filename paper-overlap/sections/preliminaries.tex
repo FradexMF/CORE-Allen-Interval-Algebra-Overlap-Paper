@@ -15,7 +15,6 @@ The following operations on complex events will be useful throughout the paper. 
 \paragraph{Predicate of events} A \textit{predicate} is a possibly infinite set $\SETP$ of events. We say that an event $e$ satisfies predicate $P$, denoted $e \vDash P$, if, and only if, $e \in P$. We generalize this notation from events to a set of events $E$ such that $E \vDash P$ if, and only if, $e \vDash P$ for every $e \in E$. We assume a fixed set of predicates $\SETP$. Further, we assume that there is a basic set of predicates $\Pbasic \subseteq \SETP$ and $\SETP$ is the closure of $\Pbasic$ under intersection and negation (i.e., $P_1 \cap P_2 \in \SETP$ and $\SETE \setminus P \in \SETP$ for every $P, P_1, P_2 \in \SETP$) where $\SETE$ is a predicate in $\SETP$, that we usually denote by true.
 
 \paragraph{Complex event logic} In this work, we use the Complex Event Logic (CEL) introduced in [21] and implemented in CORE [11] as our basic query language for CER. The syntax of a CEL formula $\varphi$ is given by the grammar:
-
 \[
 \makebox[\textwidth][s]{$
 	\varphi := R \; \big|\; \varphi \text{ AS } X 
@@ -29,7 +28,8 @@ The following operations on complex events will be useful throughout the paper. 
 	\; \big|\; \pi_L(\varphi)
 	$}
 \]
-where $R \in \SETT$ is an event type, $X \in \SETX$ is a variable, $P \in \SETP$ is a predicate, and $L \subseteq \SETX$ is a set of variables.  We define the semantics of a CEL formula $\varphi$ over a stream $\Stream$, recursively, as a set of complex events over $\Stream$ In Figure 1, we define the semantics of each CEL operator like in [11, 21].
+where $R \in \SETT$ is an event type, $X \in \SETX$ is a variable, $P \in \SETP$ is a predicate, and $L \subseteq \SETX$ is a set of variables.  We define the semantics of a CEL formula $\varphi$ over a stream $\Stream$, recursively, as a set of complex events over $\Stream$ In Figure 1, we define the semantics of each CEL operator like in~[11, 21].
+\cristian{TODO: agregar las citas con bibtex.}
 
 \begin{figure}[t]
 \[
@@ -83,3 +83,30 @@ where $R \in \SETT$ is an event type, $X \in \SETX$ is a variable, $P \in \SETP$
 
 \caption{Figure 1: The semantics of CEL formulas defined over a stream $\Stream = e_1 e_2\dots e_n$ where each $e_i$ is an event.}
 \end{figure}
+
+\paragraph{Complex Event Automata with $\epsilon$-transitions} A \textit{Complex Event Automata} (CEA) (with $\epsilon$-transitions) is a tuple $
+\mathcal{A} = (Q,\textbf{P},\textbf{X},\Delta,q_0,F)
+$
+where $Q$ is a finite set of states, $\SETP$ is the set of predicates, $\SETX$ is a finite set of variables,
+\[
+\Delta \subseteq Q \times (\SETP \times 2^{\SETX} \cup \{\epsilon\}) \times Q  
+\] is a finite relation (called the transition relation), $q_0 \in Q$ is the inital state, and $F$ is the set of final states. A transition of the form $(p, P, L, q)$ is a \emph{reading transition} and a transition of the form $(p, \epsilon, q)$ is an \emph{$\epsilon$-transition}. As usual, the automaton can change its state without consuming any event of the stream by using an $\epsilon$-transition.
+
+Let $\Stream = e_1 e_2 \ldots e_n$ be a stream. A configuration of $\cA$ over $\Stream$ is a pair $(q, i) \in Q \times [n]$.
+A run $\rho$ of $\cA$ over the stream $\Stream = e_1 e_2 \dots e_n$ from position $i$ to $j$ with $i, j \in [n]$ and $i \leq j$ is a sequence of configurations and transitions of the form:
+\[ 
+\rho := (p_1, i_1) \xrightarrow{t_1} (p_{2}, i_2) \xrightarrow{t_2} \dots \xrightarrow{t_k} (p_{k+1}, i_{k+1}) 
+\]
+such that $t_\ell \in \SETP \times 2^{\SETX} \cup \{\epsilon\}$ for every $\ell \in [k]$, $p_1 = q_0$, $i_1 = i$, $i_{k+1} = j+1$, and, for every $\ell \in [k]$:
+\begin{itemize}
+	\item if $t_\ell = (P, L)$, then $i_{\ell+1} = i_{\ell}+1$, $(p_{\ell}, P, L, p_{\ell+1}) \in \Delta$ and $e_{i_{\ell}} \vDash P$;
+	\item if $t_\ell = \epsilon$, then $i_{\ell+1} = i_{\ell}$ and $(p_{\ell}, \epsilon, p_{\ell+1}) \in \Delta$.
+\end{itemize}
+We say that the run is accepting if $p_{k+1} \in F$.
+For $t \in (\SETP \times 2^{\SETX} \cup \{\epsilon\})$ and $\ell \in [n]$ we define the complex event $\ce(t, \ell)$ of $\Stream$ such that $\ce(t, \ell) = (\ell, \ell, \{X \mapsto \{\ell\} \mid X \in L\})$ if $t = (P,L)$ and $(\ell, \ell, \emptyset)$, otherwise.
+Then a run $\rho$ from positions $i$ to $j$ like above defines the complex event $C_\rho$ such that:
+\[
+C_\rho := \ce(t_1, i_1) \cup \ce(t_2, i_2) \cup \dots \cup \ce(t_k, i_k)
+\]
+Note that when $t_\ell = \epsilon$, then the transition captures no event, but when $t_\ell = (P, L)$ the transition captures the event $e_{i_\ell}$ in each variable $X \in L$. We define the set of all complex events of $\cA$ over $\Stream$ as:  
+\[ \sem{\cA}(\Stream) = \{C_\rho \mid \rho \text{ is an accepting run of } \cA \text{ over } \Stream\} \]
